@@ -1,0 +1,56 @@
+version: "3"
+services:
+  flask:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    restart: always
+    tty: true
+    ports:
+    - 5000:5000
+    volumes:
+    - type: bind
+      source: ./app
+      target: /usr/src/app
+  mysql:
+    image: mysql
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=mysqldb
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    command: --character-set-server=utf8 --collation-server=utf8_general_ci --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3306:3306
+  mariadb:
+    image: mariadb
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=mariadb
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    command: --character-set-server=utf8 --collation-server=utf8_general_ci --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3306:4417
+  postgresql:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/mysql
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=myrootpass
+      - POSTGRES_USER=wordpress000db
+      - POSTGRES_DB=wordpress000kun
+    ports:
+      - 5432:5432
+
+volumes:
+  mysql_data:
+  mariadb_data:
+  postgres_data:
